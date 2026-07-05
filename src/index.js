@@ -5,8 +5,12 @@ import express from "express";
 import matchRouter from "./routes/match.ts";
 import commentaryRouter from "./routes/commentary.ts";
 import http from "http";
+import path from "path";
+import { fileURLToPath } from "url";
 import { attachWebSocketServer } from "./ws/server.ts";
 import { securityMiddleware } from "./ws/arcjet.ts";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = Number(process.env.PORT || 8000);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -18,6 +22,14 @@ app.use(express.json());
 
 app.get("/", (_req, res) => {
   res.send("Hello from Express server!");
+});
+
+app.get("/hello", (_req, res) => {
+  res.json({ message: "Hello World" });
+});
+
+app.get("/hello/ui", (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "commentary.html"));
 });
 
 app.use(securityMiddleware());
